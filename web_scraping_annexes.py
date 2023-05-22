@@ -11,3 +11,9 @@ for link in soup.find_all("a"):
     href = link.get("href")
     if href and "Anexo" in href:
         links.append(href)
+
+with zipfile.ZipFile("annexes.zip", "w") as zip_file:
+    for link in links:
+        filename = link.split("/")[-1]
+        response = requests.get(link)
+        zip_file.writestr(filename, response.content)
