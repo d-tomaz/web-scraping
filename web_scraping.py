@@ -13,7 +13,7 @@ for link in soup.find_all("a"):           # Itera sobre todos os elementos "a" e
     if href and "Anexo" in href:          # Verifica se o atributo href existe e se contém a substring "Anexo"
         links.append(href)                # Adiciona o link à lista de links
         
-with zipfile.ZipFile("annexes.zip", "w") as zip_file: # Abre um arquivo ZIP chamado "annexes.zip" para escrita
+with zipfile.ZipFile("anexos.zip", "w") as zip_file: # Abre um arquivo ZIP chamado "anexos.zip" para escrita
     for link in links:                                # Itera sobre todos os links na lista de links
         filename = link.split("/")[-1]                # Obtém o nome do arquivo dividindo o link pelo caractere "/" e pegando o último item resultante
         response = requests.get(link)                 # Faz uma requisição GET para o link do anexo
