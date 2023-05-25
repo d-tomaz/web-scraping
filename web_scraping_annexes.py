@@ -19,7 +19,7 @@ with zipfile.ZipFile("annexes.zip", "w") as zip_file: # Abre um arquivo ZIP cham
 
     for link in links:                    # Itera sobre todos os links na lista de links
         
-        filename = link.split("/")[-1]    # Divide o link pelo caractere "/" e pega o último item resultante
+        filename = link.split("/")[-1]    # Obtém o nome do arquivo dividindo o link pelo caractere "/" e pegando o último item resultante
         
         response = requests.get(link)     # Faz uma requisição GET para o link do anexo
         
