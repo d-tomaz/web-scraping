@@ -1,35 +1,36 @@
-import requests  
-# Importa o módulo requests para fazer requisições HTTP
-from bs4 import BeautifulSoup  
-# Importa a classe BeautifulSoup do módulo bs4 para analisar o HTML
-import zipfile  
-# Importa o módulo zipfile para manipular arquivos compactados em formato ZIP
+# Importação das bibliotecas necessárias
+import requests
+from bs4 import BeautifulSoup
+import zipfile
 
+# Definição da URL a ser acessada
 url = 'https://www.gov.br/ans/pt-br/assuntos/consumidor/o-que-o-seu-plano-de-saude-deve-cobrir-1/o-que-e-o-rol-de-procedimentos-e-evento-em-saude'
-# Define a URL do site a ser acessado
+
+# Realização da requisição HTTP para obter o conteúdo da página
 response = requests.get(url)
-# Faz uma requisição GET para a URL e armazena a resposta
+
+# Criação de um objeto BeautifulSoup para fazer o parse do conteúdo HTML
 soup = BeautifulSoup(response.content, 'html.parser')
-# Cria um objeto BeautifulSoup para analisar o conteúdo HTML da resposta
+
+# Lista para armazenar os links relevantes encontrados na página
 links = []
-# Cria uma lista vazia para armazenar os links dos anexos
 
+# Iteração pelos elementos <a> encontrados no objeto BeautifulSoup
 for link in soup.find_all('a'):
-    # Itera sobre todos os elementos "a" encontrados no conteúdo HTML
+    # Obtenção do atributo 'href' do link
     href = link.get('href')
-    # Obtém o valor do atributo href do elemento "a"
+    # Verificação se o link contém a palavra 'Anexo' em seu URL
     if href and 'Anexo' in href:
-        # Verifica se o atributo href existe e se contém a substring "Anexo"
+        # Adição do link à lista de links relevantes
         links.append(href)
-        # Adiciona o link à lista de links
 
+# Criação de um arquivo ZIP para armazenar os anexos baixados
 with zipfile.ZipFile('anexos.zip', 'w') as zip_file:
-    # Abre um arquivo ZIP chamado "anexos.zip" para escrita
+    # Iteração pelos links relevantes encontrados
     for link in links:
-        # Itera sobre todos os links na lista de links
+        # Extração do nome do arquivo a partir da URL
         filename = link.split('/')[-1]
-        # Obtém o nome do arquivo dividindo o link pelo caractere "/" e pegando o último item resultante
+        # Realização da requisição HTTP para obter o conteúdo do anexo
         response = requests.get(link)
-        # Faz uma requisição GET para o link do anexo
+        # Escrita do conteúdo do anexo no arquivo ZIP
         zip_file.writestr(filename, response.content)
-        # Escreve o conteúdo da resposta no arquivo ZIP com o nome do arquivo obtido
